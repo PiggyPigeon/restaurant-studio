@@ -1,5 +1,7 @@
 package org.restaurant;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Calendar;
@@ -9,15 +11,15 @@ public class MenuItem {
     private String description;
     private String category;
     private double price;
-    private Date dateAdded;
-    private Date dateUpdated;
+    private LocalDate dateAdded;
+    //private Date dateUpdated;
 
     public MenuItem(String name, String description, double price, String category) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.category = category;
-        this.dateAdded = new Date();
+        this.dateAdded = LocalDate.now();
     }
 
     public String getName() {
@@ -26,7 +28,7 @@ public class MenuItem {
 
     public void setName(String name) {
         this.name = name;
-        setDateUpdated();
+        //setDateUpdated();
     }
 
     public String getDescription() {
@@ -35,7 +37,7 @@ public class MenuItem {
 
     public void setDescription(String description) {
         this.description = description;
-        setDateUpdated();
+        //setDateUpdated();
     }
 
     public String getCategory() {
@@ -44,7 +46,7 @@ public class MenuItem {
 
     public void setCategory(String category) {
         this.category = category;
-        setDateUpdated();
+        //setDateUpdated();
     }
 
     public double getPrice() {
@@ -53,38 +55,55 @@ public class MenuItem {
 
     public void setPrice(double price) {
         this.price = price;
-        this.dateUpdated = new Date();
+        //this.dateUpdated = new Date();
     }
 
-    public Date getDateAdded() {
+    public LocalDate getDateAdded() {
         return dateAdded;
     }
 
-    public void setDateAdded(Date dateAdded) {
+    public void setDateAdded(LocalDate dateAdded) {
         this.dateAdded = dateAdded;
     }
 
-    public Date getDateUpdated() {
-        return dateUpdated;
+    //public LocalDate getDateUpdated() {
+    //    return dateUpdated;
+    //}
+
+    //public void setDateUpdated() {
+    //    this.dateUpdated = new Date();
+    //}
+
+    //add category to below?
+    @Override
+    public String toString(){
+        String newText = isNew() ? " - NEW!" : "";
+        return name + newText + '\n' +
+                description + " | $" + price;
     }
 
-    public void setDateUpdated() {
-        this.dateUpdated = new Date();
+    @Override
+    public boolean equals(Object toBeCompared) {
+        if (this == toBeCompared) {
+            return true;
+        }
+        if (toBeCompared == null) {
+            return false;
+        }
+        if (getClass() != toBeCompared.getClass()) {
+            return false;
+        }
+
+        MenuItem otherItem = (MenuItem) toBeCompared;
+        return this.name.equals(otherItem.getName());
     }
 
 //  A way to tell if a menu item is new.
     public boolean isNew() {
-        //determine what is "new". we're gonna say within 3 months (a season)
-        // a variable as a new date subtracting 3 months
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.MONTH, -3);
-        Date date3MonthsAgo = cal.getTime();
-        //if it was added after 3 months ago, its new. if added before, it's false.
-        if (this.dateAdded.after(date3MonthsAgo)) {
-            return true;
-        } else {
-            return false;
-        }
+        LocalDate today = LocalDate.now();
+        double daysBetween = dateAdded.until(today, ChronoUnit.DAYS);
+        System.out.println(daysBetween + " days since " + name + " was added");
+        return daysBetween < 90;
     }
 
 }

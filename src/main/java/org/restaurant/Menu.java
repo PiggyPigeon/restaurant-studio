@@ -1,22 +1,60 @@
 package org.restaurant;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Objects;
+
 
 public class Menu {
 
     private ArrayList<MenuItem> menuItems = new ArrayList<>();
-    private Date lastUpdated;
+    public LocalDate lastUpdated;
 
-
-    //    A way to add and remove menu items from the menu.
-    public void addMenuItem(MenuItem item) {
-        menuItems.add(item);
+    @Override
+    public String toString() {
+        StringBuilder appetizers = new StringBuilder();
+        for (MenuItem item : menuItems) {
+            if (item.getCategory().equals("appetizer")) {
+                appetizers.append("\n" + item.toString() + "\n");
+            }
+        }
+        StringBuilder mainCourses = new StringBuilder();
+        for (MenuItem item : menuItems) {
+            if (item.getCategory().equals("main course")) {
+                mainCourses.append("\n" + item.toString() + "\n");
+            }
+        }
+        StringBuilder desserts = new StringBuilder();
+        for (MenuItem item : menuItems) {
+            if (item.getCategory().equals("dessert")) {
+                desserts.append("\n" + item.toString() + "\n");
+            }
+        }
+        return "\nTONY's PIZZA MENU\n" +
+                "APPETIZERS" + appetizers.toString() +
+                "\n" + "MAIN COURSES" + mainCourses.toString()
+                + "\n" + "DESSERTS" + desserts.toString() + "\n";
     }
 
-    public void removeMenuItem(MenuItem item) {
+    //    A way to add and remove menu items from the menu.
+    void addMenuItem(MenuItem newItem) {
+        String message = "That item already exists.";
+        if (menuItems.contains(newItem)) {
+            System.out.println(message);
+            return;
+        }
+        for (MenuItem item : menuItems) {
+            if (item.equals(newItem)) {
+                System.out.println(message);
+                return;
+            }
+        }
+        menuItems.add(newItem);
+        lastUpdated = LocalDate.now();
+    }
+
+    void removeMenuItem(MenuItem item) {
         menuItems.remove(item);
+        lastUpdated = LocalDate.now();
     }
 
     //getters and setters
@@ -27,52 +65,41 @@ public class Menu {
     public void setMenuItems(ArrayList<MenuItem> menuItems) {
         this.menuItems = menuItems;
     }
+}
 
-    public Date getLastUpdated() {
-        return lastUpdated;
-    }
 
-    public void setLastUpdated(Date lastUpdated) {
-        this.lastUpdated = lastUpdated;
-    }
+
 
 
     // A way to determine whether or not two menu items are equal.
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Menu menu = (Menu) o;
-        return menuItems.equals(menu.menuItems);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(menuItems);
-    }
-
-    //a way to print the entire menu
-    public void printMenu() {
-        for (MenuItem item : menuItems) {
-            System.out.println(item.getName() + " " + item.getDescription() + " - $" + item.getPrice());
-        }
-
-    }
-
-//    public void printMenuItem(int index) {
-//        if (index < 0 || index >= menuItems.size()) {
-//            System.out.println("Invalid index!");
-//            return;
-//        }
-//        MenuItem item = menuItems.get(index);
-//        System.out.println(item.getName() + " - $" + item.getPrice());
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (o == null || getClass() != o.getClass()) return false;
+//        Menu menu = (Menu) o;
+//        return menuItems.equals(menu.menuItems);
 //    }
-
+//
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(menuItems);
+//    }
+//
+//    //a way to print the entire menu
+//    public void printMenu() {
+//        for (MenuItem item : menuItems) {
+//            System.out.println(item.getName() + " " + item.getDescription() + " - $" + item.getPrice());
+//        }
+//
+//    }
+//
+//    // A way to print out both a single menu item
 //    public void printMenuItem(String name) {
 //        boolean found = false;
 //        for (MenuItem item : menuItems) {
+//            //will equals() work here or does it need an object arg??
 //            if (item.getName().equals(name)) {
-//                System.out.println(item.getName() + " - $" + item.getPrice());
+//                System.out.println(item.getName() + " " + item.getDescription() + " - $" + item.getPrice());
 //                found = true;
 //                break;
 //            }
@@ -81,23 +108,6 @@ public class Menu {
 //            System.out.println("Item not found!");
 //        }
 //    }
-
-    // A way to print out both a single menu item
-    public void printMenuItem(String name) {
-        boolean found = false;
-        for (MenuItem item : menuItems) {
-            //will equals() work here or does it need an object arg??
-            if (item.getName().equals(name)) {
-                System.out.println(item.getName() + " " + item.getDescription() + " - $" + item.getPrice());
-                found = true;
-                break;
-            }
-        }
-        if (!found) {
-            System.out.println("Item not found!");
-        }
-    }
-}
 
 
 
